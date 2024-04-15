@@ -17,9 +17,12 @@
 ;;   presentations or streaming.
 ;; - `doom-symbol-font' -- for symbols
 ;; - `doom-serif-font' -- for the `fixed-pitch-serif' face
-(setq doom-font (font-spec :family "CodeNewRoman Nerd Font Mono" :size 15 :weight 'normal)
-      doom-variable-pitch-font (font-spec :family "CodeNewRoman Nerd Font Mono") ; inherits `doom-font''s :size
-      doom-big-font (font-spec :family "CodeNewRoman Nerd Font Mono" :size 19))
+;; (setq doom-font (font-spec :family "Source Code Pro" :size 14 :weight 'bold)
+(setq doom-font (font-spec :family "MonoLisa" :size 14 :weight 'normal)
+      ;; doom-variable-pitch-font (font-spec :family "Cascadia Code") ; inherits `doom-font''s :size
+      ;; doom-big-font (font-spec :family "Cascadia Code" :size 19)
+      )
+
 ;;
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
@@ -31,6 +34,12 @@
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
 ;; refresh your font settings. If Emacs still can't find your font, it likely
 ;; wasn't installed correctly. Font issues are rarely Doom issues!
+
+
+
+;; ui
+(add-hook 'window-setup-hook 'toggle-frame-maximized)
+
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -45,6 +54,12 @@
 (setq company-idle-delay 0.1)
 (setq company-tooltip-idle-delay 0.1)
 (setq completion-ignore-case t)
+(setq which-key-idle-delay 0.5)
+(setq tool-bar-mode -1)
+
+
+(after! lsp-ui
+  (setq lsp-ui-doc-max-height 20))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -118,4 +133,42 @@
   (setq lsp-java-vmargs '("-XX:+UseParallelGC" "-XX:GCTimeRatio=4" "-XX:AdaptiveSizePolicyWeight=90" "-Dsun.zip.disableMemoryMapping=true" "-Xmx2G" "-Xms100m"))
   (push (concat "-javaagent:" (expand-file-name lombok-library-path)) lsp-java-vmargs))
 
-(setq rustic-lsp-client 'eglot)
+;; (after! rustic
+;;   (setq rustic-lsp-client 'eglot))
+
+(add-hook 'vue-mode-hook #'lsp!)
+
+
+(after! ellama
+  (setopt ellama-keymap-prefix "C-c e")
+  ;; (setopt ellama-language "Chinese")
+  (require 'llm-ollama)
+  (setopt ellama-provider
+          (make-llm-ollama
+           ;; this model should be pulled to use it
+           ;; value should be the same as you print in terminal during pull
+           :chat-model "gpt-4-turbo-preview"
+           :embedding-model "gpt-4-turbo-preview"))
+  )
+
+
+
+
+;; (map! :leader
+;;       (:prefix g))
+
+;; we recommend using use-package to organize your init.el
+;; (use-package company
+;;   :defer 0.1
+;;   :config
+;;   (global-company-mode t)
+;;   (setq-default
+;;    company-idle-delay 0.05
+;;    company-require-match nil
+;;    company-minimum-prefix-length 0
+
+;;    ;; get only preview
+;;    company-frontends '(company-preview-frontend)
+;;    ;; also get a drop down
+;;    ;; company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)
+;;    ))
