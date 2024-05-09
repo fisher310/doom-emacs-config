@@ -18,11 +18,14 @@
 ;; - `doom-symbol-font' -- for symbols
 ;; - `doom-serif-font' -- for the `fixed-pitch-serif' face
 ;; (setq doom-font (font-spec :family "Source Code Pro" :size 14 :weight 'bold)
-(setq doom-font (font-spec :family "MonoLisa" :size 14 :weight 'normal)
+(setq doom-font (font-spec :family "Operator Mono SSm Lig" :size 15 :weight 'book)
       ;; doom-variable-pitch-font (font-spec :family "Cascadia Code") ; inherits `doom-font''s :size
       ;; doom-big-font (font-spec :family "Cascadia Code" :size 19)
       )
 
+(after! dirvi
+  (dirvish-override-dired-mode)
+  )
 ;;
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
@@ -44,7 +47,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one-light)
+(setq doom-theme 'doom-tomorrow-day)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -64,6 +67,64 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
+
+;; (after! org
+;;   (global-org-modern-mode))
+
+(after! org
+  ;; 关闭TODO的时候带着时间戳
+  (setq org-log-done-with-time t)
+  (setq org-log-done t)
+
+  ;; 开启org-super-agent
+  (setq org-super-agenda-mode t)
+  (let ((org-super-agenda-groups
+         '(;; Each group has an implicit boolean OR operator between its selectors.
+           (:name "Today"  ; Optionally specify section name
+            :time-grid t  ; Items that appear on the time grid
+            :todo "TODAY")  ; Items that have this TODO keyword
+           (:name "Important"
+            ;; Single arguments given alone
+            :tag "bills"
+            :priority "A")
+           ;; Set order of multiple groups at once
+           (:order-multi (2 (:name "Shopping in town"
+                             ;; Boolean AND group matches items that match all subgroups
+                             :and (:tag "shopping" :tag "@town"))
+                            (:name "Food-related"
+                             ;; Multiple args given in list with implicit OR
+                             :tag ("food" "dinner"))
+                            (:name "Personal"
+                             :habit t
+                             :tag "personal")
+                            (:name "Space-related (non-moon-or-planet-related)"
+                             ;; Regexps match case-insensitively on the entire entry
+                             :and (:regexp ("space" "NASA")
+                                   ;; Boolean NOT also has implicit OR between selectors
+                                   :not (:regexp "moon" :tag "planet")))))
+           ;; Groups supply their own section names when none are given
+           (:todo "WAITING" :order 8)  ; Set order of this section
+           (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-WATCH" "WATCHING")
+            ;; Show this group at the end of the agenda (since it has the
+            ;; highest number). If you specified this group last, items
+            ;; with these todo keywords that e.g. have priority A would be
+            ;; displayed in that group instead, because items are grouped
+            ;; out in the order the groups are listed.
+            :order 9)
+           (:priority<= "B"
+            ;; Show this section after "Today" and "Important", because
+            ;; their order is unspecified, defaulting to 0. Sections
+            ;; are displayed lowest-number-first.
+            :order 1)
+           ;; After the last group, the agenda will display items that didn't
+           ;; match any of these groups, with the default order position of 99
+           )))
+    (org-agenda nil "a"))
+
+  )
+
+(add-hook 'org-mode-hook #'valign-mode)
+
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -97,6 +158,7 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 ;;
+
 ;; remove all keybindings from insert-state keymap,it is VERY VERY important
 (setcdr evil-insert-state-map nil)
 ;;;把emacs模式下的按键绑定到Insert模式下
@@ -172,3 +234,4 @@
 ;;    ;; also get a drop down
 ;;    ;; company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)
 ;;    ))
+
