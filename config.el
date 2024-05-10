@@ -189,3 +189,18 @@
 ;;    ;; company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)
 ;;    ))
 
+(use-package! sis
+  :config
+  (setq sis-english-source "com.apple.keylayout.ABC")
+  (sis-ism-lazyman-config
+   "com.apple.keylayout.ABC"
+   "com.apple.inputmethod.SCIM.ITABC" 'macism)
+  ;; enable the /cursor color/ mode
+  (sis-global-cursor-color-mode t)
+  ;; enable the /respect/ mode
+  (sis-global-respect-mode t)
+  ;; enable the /context/ mode for all buffers
+  (sis-global-context-mode t)
+  ;; enable the /inline english/ mode for all buffers
+  (sis-global-inline-mode t)
+  )
