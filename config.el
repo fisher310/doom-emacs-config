@@ -18,12 +18,12 @@
 ;; - `doom-symbol-font' -- for symbols
 ;; - `doom-serif-font' -- for the `fixed-pitch-serif' face
 ;; (setq doom-font (font-spec :family "Source Code Pro" :size 14 :weight 'bold)
-(setq doom-font (font-spec :family "CodeNewRoman Nerd Font Mono" :size 16 :weight 'Regular)
+(setq doom-font (font-spec :family "RecMonoCasual Nerd Font Mono" :size 15 :weight 'Regular)
       ;; doom-variable-pitch-font (font-spec :family "Cascadia Code") ; inherits `doom-font''s :size
       ;; doom-big-font (font-spec :family "Cascadia Code" :size 19)
       )
 
-(after! dirvi
+(after! dirvish
   (dirvish-override-dired-mode)
   )
 ;;
@@ -47,8 +47,8 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;; (setq doom-theme 'doom-tomorrow-day)
-(setq doom-theme 'leuven)
+(setq doom-theme 'doom-oksolar-dark)
+;; (setq doom-theme 'leuven)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -73,8 +73,8 @@
   ;; 关闭TODO的时候带着时间戳
   (setq org-log-done-with-time t)
   (setq org-log-done t)
-  (add-hook 'org-mode-hook #'valign-mode)
-  (global-org-modern-mode))
+  (add-hook 'org-mode-hook #'valign-mode))
+;; (global-org-modern-mode))
 
 
 
@@ -122,7 +122,7 @@
 ;;
 (after! dap-mode
   (require 'dap-codelldb)
-  ;; (require 'dap-cpptools)
+  (require 'dap-cpptools)
   (setq dap-auto-configure-features '(sessions locals controls tooltip))
   (setq dap-auto-configure-mode t)
 
@@ -138,6 +138,26 @@
          :dap-compilation "cargo build"
          :dap-compilation-dir "${workspaceFolder}"
          ))
+
+  ;; (setq lsp-rust-analyzer-debug-lens-extra-dap-args
+  ;;       `(:MIMode "lldb"
+  ;;         :miDebuggerPath ,(f-join doom-local-dir "etc/dap-extension/vscode/cpptools/extension/debugAdapters/lldb-mi/bin/lldb-mi")
+  ;;         :stopAtEntry t
+  ;;         :externalConsole
+  ;;         :json-false))
+  (setq lsp-rust-analyzer-debug-lens-extra-dap-args
+        `(:MIMode "lldb"
+          :targetArchitecture "arm64",
+          :miDebuggerPath "rust-lldb"
+          :stopAtEntry t
+          :externalConsole
+          :json-false))
+  ;; (setq lsp-rust-analyzer-debug-lens-extra-dap-args
+  ;;       `(:MIMode "lldb"
+  ;;         :miDebuggerPath "~/.cargo/bin/rust-lldb"
+  ;;         :stopAtEntry nil
+  ;;         :externalConsole
+  ;;         :json-false))
   )
 
 (map! :map dap-mode-map
@@ -170,6 +190,13 @@
       :desc "dap breakpoint condition"   "c" #'dap-breakpoint-condition
       :desc "dap breakpoint hit count"   "h" #'dap-breakpoint-hit-condition
       :desc "dap breakpoint log message" "l" #'dap-breakpoint-log-message)
+
+(add-hook 'rust-mode-hook 'eglot-ensure)
+(after! eglot
+  (add-to-list 'eglot-server-programs
+               '((rust-ts-mode rust-mode) .
+                 ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
+  )
 
 
 ;; Java Configuration
@@ -305,13 +332,32 @@
 
 
 
-(define-key evil-normal-state-map (kbd "<SPC>=f") 'lsp-format-buffer)
+;; (define-key evil-normal-state-map (kbd "<SPC>=f") 'lsp-format-buffer)
 
 
 
 ;; (add-load-path! "/Users/lihailong/.config/doom/emacs-application-framework")
 
+;; (use-package! eaf
+;;   :after init.el
+;;   :config
+;;   )
+
 ;; (require 'eaf)
 ;; (require 'eaf-browser)
+;; (require 'eaf-music-player)
+;; (require 'eaf-js-video-player)
+;; (require 'eaf-2048)
+;; (require 'eaf-image-viewer)
 ;; (require 'eaf-pdf-viewer)
-
+;; (require 'eaf-browser)
+;; (require 'eaf-markdown-previewer)
+;; (require 'eaf-file-browser)
+;; (require 'eaf-file-manager)
+;; (require 'eaf-mindmap)
+;; (require 'eaf-video-player)
+;; (require 'eaf-org-previewer)
+;; (require 'eaf-jupyter)
+;; (require 'eaf-git)
+;; (require 'eaf-system-monitor)
+;; (require 'eaf-markmap)

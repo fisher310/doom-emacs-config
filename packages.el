@@ -25,21 +25,21 @@
 ;;   :recipe (:host github :repo "username/repo"))
 
 (package! dirvish)
-(package! org-modern)
+;; (package! org-modern)
 (package! valign)
 (package! org-super-agenda)
 (package! sis)
 ;; (package! eglot-java)
-(when (package! lsp-bridge
-        :recipe (:host github
-                 :repo "manateelazycat/lsp-bridge"
-                 :branch "master"
-                 :files ("*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
-                 ;; do not perform byte compilation or native compilation for lsp-bridge
-                 :build (:not compile)
-                 ))
-  (package! markdown-mode)
-  (package! yasnippet))
+;; (when (package! lsp-bridge
+;;         :recipe (:host github
+;;                  :repo "manateelazycat/lsp-bridge"
+;;                  :branch "master"
+;;                  :files ("*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
+;;                  ;; do not perform byte compilation or native compilation for lsp-bridge
+;;                  :build (:not compile)
+;;                  ))
+;;   (package! markdown-mode)
+;;   (package! yasnippet))
 ;; If the package you are trying to install does not contain a PACKAGENAME.el
 ;; file, or is located in a subdirectory of the repo, you'll need to specify
 ;; `:files' in the `:recipe':
